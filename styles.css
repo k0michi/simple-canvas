@@ -1,0 +1,13 @@
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+hr {
+  margin: 0;
+}
+
+#canvas {
+  width: 100vw;
+  height: 80vh;
+}

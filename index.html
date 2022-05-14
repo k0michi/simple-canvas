@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <canvas id="canvas"></canvas>
+  <hr>
+  <div>
+    Coefficient for control points
+    <input type="range" min="0" max="100" id="range-k">
+    <span id="value-k"></span>
+  </div>
+  <div>
+    Sampling rate limit
+    <input type="range" min="0" max="1000" id="range-sample-limit">
+    <span id="value-sample-limit"></span>
+  </div>
+  <script src="main.js"></script>
+</body>
+
+</html>
