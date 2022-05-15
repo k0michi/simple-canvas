@@ -72,14 +72,17 @@ class FPSCounter {
     this.count = 0;
   }
 
+  updateAndCount(time) {
+    this.update(time);
+    this.tempCount++;
+  }
+
   update(time) {
     if (time >= this.lastTime + 1000) {
       this.count = this.tempCount;
       this.tempCount = 0;
       this.lastTime = time;
     }
-
-    this.tempCount++;
   }
 
   get() {
@@ -164,6 +167,7 @@ window.addEventListener('load', e => {
     if (dragging) {
       samplePointer(e);
       prevSamplingTime = time;
+      samplingCounter.updateAndCount(time);
     }
   });
 
@@ -200,7 +204,7 @@ window.addEventListener('load', e => {
   window.requestAnimationFrame(render);
 });
 
-let K = 0.4;
+let K = 0.35;
 
 let prevSamplingTime = 0;
 let prevRenderTime = 0;
@@ -213,6 +217,7 @@ let $canvas;
 let ctx;
 let dragging;
 let fpsCounter;
+let samplingCounter = new FPSCounter();
 
 let limitRefreshRate = true;
 let refreshRateLimit = 60;
@@ -296,6 +301,7 @@ function renderDebugInfo() {
   ctx.font = `${fontSize}px sans-serif`;
   const debugInfo = [
     `refreshRate: ${fpsCounter.get()}`,
+    `samplingRate: ${samplingCounter.get()}`,
     `strokes: ${image.strokes.length}`,
     `samples: ${image.strokes.reduce((p, c) => p + c.samples.length, 0)}`
   ];
@@ -319,7 +325,8 @@ function render(time) {
 
   ctx.clearRect(0, 0, $canvas.width, $canvas.height);
   const elapsed = time - prevRenderTime;
-  fpsCounter.update(time);
+  fpsCounter.updateAndCount(time);
+  samplingCounter.update(time);
 
   for (const stroke of image.strokes) {
     renderCircles(stroke);
