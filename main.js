@@ -26,6 +26,14 @@ class Vector2 {
     return new Vector2(b * this.x, b * this.y);
   }
 
+  div(b) {
+    return new Vector2(this.x / b, this.y / b);
+  }
+
+  normalized() {
+    return this.div(this.length());
+  }
+
   dot(b) {
     return this.x * b.x + this.y * b.y;
   }
@@ -192,7 +200,7 @@ window.addEventListener('load', e => {
   window.requestAnimationFrame(render);
 });
 
-let K = 0.2;
+let K = 0.4;
 
 let prevSamplingTime = 0;
 let prevRenderTime = 0;
@@ -330,10 +338,28 @@ function bezierCurveTo(cp1, cp2, end) {
 }
 
 // Calculate control points for point b
+/*
+let K = 0.2;
 function calculateCPs(a, b, c) {
   if (a == null || c == null) {
     return [b, b];
   }
 
   return [c.sub(a).mul(-K).add(b), c.sub(a).mul(K).add(b)];
+}
+*/
+
+// Calculate control points for point b
+function calculateCPs(a, b, c) {
+  if (a == null || c == null) {
+    return [b, b];
+  }
+
+  const ac = c.sub(a);
+  const bc = c.sub(b);
+  const ab = b.sub(a);
+
+  const ka = K * ab.dot(ac) / ac.length();
+  const kb = K * bc.dot(ac) / ac.length();
+  return [ac.normalized().mul(-ka).add(b), ac.normalized().mul(kb).add(b)];
 }
